@@ -108,7 +108,7 @@ function fiveDays (weather) {
 
         temp.textContent = weather.daily[select].temp.day + "F";
         humidity.textContent = weather.daily[select].humidity + "%";
-        wind.textContent = weather.daily[select].wind_speed = "mph";
+        wind.textContent = weather.daily[select].wind_speed + "mph";
     }
 };
 
