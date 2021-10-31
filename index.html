@@ -1,38 +1,86 @@
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <title>Weather Dashboard</title>
 </head>
-<body>
-    <header>
-        <h1>Weather Dashboard</h1>
+
+<body class="columns is-multiline">
+
+    <header class="column is-full">
+        <h1 class="title is-1">Weather Dashboard</h1>
     </header>
 
-    <section id="sidebar">
+    <section id="sidebar" class="column is-one-quarter is-multiline box">
 
-        <h2>Search for a City:</h2>
+        <h2 class="title is-3">Search for a City:</h2>
 
-        <textarea id="searchBar"></textarea>
+        <textarea id="searchBar" class="textarea is-primary" placeholder="Enter City Name" rows="1"></textarea>
 
-        <button id="searchButton">Search</button>
+        <button id="searchButton" class="button is-primary is-rounded">Search</button>
 
         <div id="savedLocations">
-            
+            <h2 class="title is-3">Search History</h2>
         </div>
     </section>
 
 
-    <section>
-    <div id="locationFore">
-        <h2 id="locationForeTitle"></h2>
-    </div>
+    <section class="column is-three-quarters box">
 
-    <div id="5DayFore">
-        <h2>5-Day Forecast</h2>
-    </div>
+        <div id="locationFore" class="box">
+            <h2 id="locationForeTitle" class="title is-3">Current Forecast</h2>
+            <p class="block title is-6">Temperature: <span id="temp"></span></p>
+            <p class="block title is-6">Humidity: <span id="humidity"></span></p>
+            <p class="block title is-6">Wind Speed: <span id="wind"></span></p>
+            <p class="block title is-6">UV Index: <span id="uv"></span><span class="alert" id="uv-alert"></span></p>
+        </div>
+
+        <div id="5DayFore" class="box columns is-multiline">
+            <h2 class="column is-full">5-Day Forecast</h2>
+
+            <div class="column is-one-fifth box dayOne">
+                <p class="block title is-6">Temperature: <span id="temp"></span></p>
+                <p class="block title is-6">Humidity: <span id="humidity"></span></p>
+                <p class="block title is-6">Wind Speed: <span id="wind"></span></p>
+            </div>
+
+            <div class="column is-one-fifth box dayTwo">
+
+                <p class="block title is-6">Temperature: <span id="temp"></span></p>
+                <p class="block title is-6">Humidity: <span id="humidity"></span></p>
+                <p class="block title is-6">Wind Speed: <span id="wind"></span></p>
+            </div>
+
+            <div class="column is-one-fifth box dayThree">
+
+                <p class="block title is-6">Temperature: <span id="temp"></span></p>
+                <p class="block title is-6">Humidity: <span id="humidity"></span></p>
+                <p class="block title is-6">Wind Speed: <span id="wind"></span></p>
+            </div>
+
+            <div class="column is-one-fifth box dayFour">
+
+                <p class="block title is-6">Temperature: <span id="temp"></span></p>
+                <p class="block title is-6">Humidity: <span id="humidity"></span></p>
+                <p class="block title is-6">Wind Speed: <span id="wind"></span></p>
+            </div>
+
+            <div class="column is-one-fifth box dayFive">
+                
+                <p class="block title is-6">Temperature: <span id="temp"></span></p>
+                <p class="block title is-6">Humidity: <span id="humidity"></span></p>
+                <p class="block title is-6">Wind Speed: <span id="wind"></span></p>
+            </div>
+        </div>
+
     </section>
 
+    <script src="./assets/js/script.js"></script>
 </body>
+
 </html>
