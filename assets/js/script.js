@@ -1,9 +1,11 @@
 var searchButton = document.getElementById("searchButton");
 var searchBar = document.getElementById("searchBar");
 var searchedLocation;
+var DateTime = luxon.DateTime;
+var searched;
 
 // this function gets the coordinates of the searched location
-function getWeatherData (location) {
+function getWeatherData(location) {
     // format the Open Weather api url                         User entered location             api key
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&units=imperial&appid=07748c42b466d653378d277748838d7c";
 
@@ -17,9 +19,7 @@ function getWeatherData (location) {
                     var lon = data.coord.lon;
                     searchedLocation = data.name;
 
-                    getAdditionalData(lat, lon)
-
-                    console.log(data);
+                    getAdditionalData(lat, lon);
                 });
             } else {
                 // request was unsuccessful 
@@ -32,7 +32,7 @@ function getWeatherData (location) {
 };
 
 // this function gets the desired information from the searched location, using coordinates
-function getAdditionalData (lat, lon) {
+function getAdditionalData(lat, lon) {
     // format the Open Weather api url                         User entered location             api key
     var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly&units=imperial&appid=07748c42b466d653378d277748838d7c";
 
@@ -44,7 +44,6 @@ function getAdditionalData (lat, lon) {
                 response.json().then(function (data) {
                     applyCurrentWeather(data);
                     fiveDays(data);
-                    console.log(data);
                 });
             } else {
                 // request was unsuccessful 
@@ -62,7 +61,8 @@ function userCity() {
     getWeatherData(finalSearch);
 
     //TODO: call function that saves search history, using finalSearch
-
+    saveSearch();
+    loadSearch();
     searchBar.value = "";
 };
 
@@ -70,9 +70,21 @@ function userCity() {
 function saveCity(event) {
     event.preventDefault();
     userCity();
+
 };
 
-//
+// saves searched locations to local storage
+function saveSearch() {
+    searched = searchBar.value.trim();
+
+    localStorage.setItem("searched", JSON.stringify(searched));
+};
+
+function loadSearch() {
+    searched = JSON.parse(localStorage.getItem("searched"));
+
+    console.log(searched);
+};
 
 // function pushes current weather info into relevant elements
 function applyCurrentWeather(weather) {
@@ -82,8 +94,9 @@ function applyCurrentWeather(weather) {
     var uv = document.getElementById("uv");
     var date = document.getElementById("currentDate")
     var currentWeather = weather.current;
+    var currentDateMilli = weather.current.dt;
 
-    date.textContent = searchedLocation;
+    date.textContent = searchedLocation + " " + calculateDate(currentDateMilli);
     temp.textContent = currentWeather.temp + "F";
     humidity.textContent = currentWeather.humidity + "%";
     wind.textContent = currentWeather.wind_speed + "mph";
@@ -91,27 +104,42 @@ function applyCurrentWeather(weather) {
 
 };
 
-// function sets uvi warning 
+// function sets uvi warning status
 
 // function pushes 5 day forecast info into relevant elements
-function fiveDays (weather) {
+function fiveDays(weather) {
 
     for (var i = 1; i <= 5; i++) {
         var targetDayTemp = "temp" + i;
         var targetDayHumidity = "humidity" + i;
         var targetDayWind = "wind" + i;
-        var select = i - 1;
-        
+        var targetDayDate = "forecastDate" + i;
+        var targetDayIcon = "icon" + i;
+        var dateMilliseconds = weather.daily[i].dt;
+        var iconCode = weather.daily[i].weather[0].icon;
+        var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+
+        var icon = document.getElementById(targetDayIcon);
+        var date = document.getElementById(targetDayDate);
         var temp = document.getElementById(targetDayTemp);
         var humidity = document.getElementById(targetDayHumidity);
         var wind = document.getElementById(targetDayWind);
 
-        temp.textContent = weather.daily[select].temp.day + "F";
-        humidity.textContent = weather.daily[select].humidity + "%";
-        wind.textContent = weather.daily[select].wind_speed + "mph";
+        icon.setAttribute("src", iconUrl);
+        date.textContent = calculateDate(dateMilliseconds);
+        temp.textContent = weather.daily[i].temp.day + "F";
+        humidity.textContent = weather.daily[i].humidity + "%";
+        wind.textContent = weather.daily[i].wind_speed + "mph";
+        console.log(iconUrl);
+        console.log(icon);
     }
 };
 
-// function saves search to search history
+function calculateDate(milli) {
+    var date = DateTime.fromMillis(milli * 1000).toLocaleString();
+    return date;
+};
+
+// grabs current weather image
 
 searchButton.onclick = saveCity;
